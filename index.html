@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Drankbestelling</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      margin: 20px;
+    }
+    h2 {
+      color: #333;
+    }
+    .top-balk {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 20px;
+      max-width: 400px;
+      margin-bottom: 30px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .drank-blok {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 20px;
+      max-width: 400px;
+      margin-bottom: 30px;
+    }
+    .drank {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px 0;
+    }
+    .drank span:first-child {
+      flex: 1;
+    }
+    .bediening {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .aantal {
+      width: 30px;
+      text-align: center;
+      font-weight: bold;
+    }
+    #reset {
+      background-color: #dc3545;
+    }
+    #reset:hover {
+      background-color: #b02a37;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-balk">
+    <div>Totaal aantal drankjes: <span id="totaalAantal">0</span></div>
+    <button id="reset" onclick="resetAlles()">Reset</button>
+  </div>
+
+  <!-- BIEREN -->
+  <div class="drank-blok" id="bieren">
+    <h2>Bieren</h2>
+    <div class="drank"><span>Pils</span><div class="bediening"><button onclick="verlaag('pils')">-</button><span id="pils" class="aantal">0</span><button onclick="verhoog('pils')">+</button></div></div>
+    <div class="drank"><span>Carlsberg</span><div class="bediening"><button onclick="verlaag('carlsberg')">-</button><span id="carlsberg" class="aantal">0</span><button onclick="verhoog('carlsberg')">+</button></div></div>
+    <div class="drank"><span>La Chouffe</span><div class="bediening"><button onclick="verlaag('lachouffe')">-</button><span id="lachouffe" class="aantal">0</span><button onclick="verhoog('lachouffe')">+</button></div></div>
+    <div class="drank"><span>Crystal 0.0</span><div class="bediening"><button onclick="verlaag('crystal')">-</button><span id="crystal" class="aantal">0</span><button onclick="verhoog('crystal')">+</button></div></div>
+    <div class="drank"><span>Affligem</span><div class="bediening"><button onclick="verlaag('affligem')">-</button><span id="affligem" class="aantal">0</span><button onclick="verhoog('affligem')">+</button></div></div>
+    <div class="drank"><span>Affligem 0.0</span><div class="bediening"><button onclick="verlaag('affligem0')">-</button><span id="affligem0" class="aantal">0</span><button onclick="verhoog('affligem0')">+</button></div></div>
+  </div>
+
+  <!-- WIJNEN -->
+  <div class="drank-blok" id="wijnen">
+    <h2>Wijnen</h2>
+    <div class="drank"><span>Cava</span><div class="bediening"><button onclick="verlaag('cava')">-</button><span id="cava" class="aantal">0</span><button onclick="verhoog('cava')">+</button></div></div>
+    <div class="drank"><span>Witte wijn</span><div class="bediening"><button onclick="verlaag('witwijn')">-</button><span id="witwijn" class="aantal">0</span><button onclick="verhoog('witwijn')">+</button></div></div>
+    <div class="drank"><span>Rosé</span><div class="bediening"><button onclick="verlaag('rose')">-</button><span id="rose" class="aantal">0</span><button onclick="verhoog('rose')">+</button></div></div>
+  </div>
+
+  <!-- FRISDRANKEN -->
+  <div class="drank-blok" id="frisdranken">
+    <h2>Frisdranken</h2>
+    <div class="drank"><span>Cola</span><div class="bediening"><button onclick="verlaag('cola')">-</button><span id="cola" class="aantal">0</span><button onclick="verhoog('cola')">+</button></div></div>
+    <div class="drank"><span>Cola Zero</span><div class="bediening"><button onclick="verlaag('colazero')">-</button><span id="colazero" class="aantal">0</span><button onclick="verhoog('colazero')">+</button></div></div>
+    <div class="drank"><span>Ice Tea</span><div class="bediening"><button onclick="verlaag('icetea')">-</button><span id="icetea" class="aantal">0</span><button onclick="verhoog('icetea')">+</button></div></div>
+    <div class="drank"><span>Ice Tea Zero</span><div class="bediening"><button onclick="verlaag('iceteazero')">-</button><span id="iceteazero" class="aantal">0</span><button onclick="verhoog('iceteazero')">+</button></div></div>
+    <div class="drank"><span>Ice Tea Green</span><div class="bediening"><button onclick="verlaag('iceteagreen')">-</button><span id="iceteagreen" class="aantal">0</span><button onclick="verhoog('iceteagreen')">+</button></div></div>
+    <div class="drank"><span>Plat water</span><div class="bediening"><button onclick="verlaag('platwater')">-</button><span id="platwater" class="aantal">0</span><button onclick="verhoog('platwater')">+</button></div></div>
+    <div class="drank"><span>Spuitwater</span><div class="bediening"><button onclick="verlaag('spuitwater')">-</button><span id="spuitwater" class="aantal">0</span><button onclick="verhoog('spuitwater')">+</button></div></div>
+    <div class="drank"><span>Tonic</span><div class="bediening"><button onclick="verlaag('tonic')">-</button><span id="tonic" class="aantal">0</span><button onclick="verhoog('tonic')">+</button></div></div>
+  </div>
+
+  <script>
+    function verhoog(id) {
+      const el = document.getElementById(id);
+      el.textContent = parseInt(el.textContent) + 1;
+      updateTotaal();
+    }
+
+    function verlaag(id) {
+      const el = document.getElementById(id);
+      const value = parseInt(el.textContent);
+      if (value > 0) el.textContent = value - 1;
+      updateTotaal();
+    }
+
+    function updateTotaal() {
+      let totaal = 0;
+      document.querySelectorAll('.aantal').forEach(el => {
+        totaal += parseInt(el.textContent);
+      });
+      document.getElementById('totaalAantal').textContent = totaal;
+    }
+
+    function resetAlles() {
+      document.querySelectorAll('.aantal').forEach(el => el.textContent = "0");
+      document.getElementById('totaalAantal').textContent = "0";
+    }
+  </script>
+
+</body>
+</html>
