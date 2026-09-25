@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
   <meta charset="UTF-8">
   <title>Drankbestelling</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,9 @@
       margin: 20px;
     }
     h2 {
-      color: #333;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
     }
     .top-balk {
       display: flex;
@@ -24,7 +26,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       padding: 20px;
       max-width: 400px;
-      margin-bottom: 30px;
+      margin-bottom: 15px;
       font-size: 18px;
       font-weight: bold;
     }
@@ -34,7 +36,7 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       padding: 20px;
       max-width: 400px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     .drank {
       display: flex;
@@ -82,39 +84,56 @@
     <button id="reset" onclick="resetAlles()">Reset</button>
   </div>
 
-  <!-- BIEREN -->
-  <div class="drank-blok" id="bieren">
-    <h2>Bieren</h2>
-    <div class="drank"><span>Pils</span><div class="bediening"><button onclick="verlaag('pils')">-</button><span id="pils" class="aantal">0</span><button onclick="verhoog('pils')">+</button></div></div>
-    <div class="drank"><span>Carlsberg</span><div class="bediening"><button onclick="verlaag('carlsberg')">-</button><span id="carlsberg" class="aantal">0</span><button onclick="verhoog('carlsberg')">+</button></div></div>
-    <div class="drank"><span>La Chouffe</span><div class="bediening"><button onclick="verlaag('lachouffe')">-</button><span id="lachouffe" class="aantal">0</span><button onclick="verhoog('lachouffe')">+</button></div></div>
-    <div class="drank"><span>Crystal 0.0</span><div class="bediening"><button onclick="verlaag('crystal')">-</button><span id="crystal" class="aantal">0</span><button onclick="verhoog('crystal')">+</button></div></div>
-    <div class="drank"><span>Affligem</span><div class="bediening"><button onclick="verlaag('affligem')">-</button><span id="affligem" class="aantal">0</span><button onclick="verhoog('affligem')">+</button></div></div>
-    <div class="drank"><span>Affligem 0.0</span><div class="bediening"><button onclick="verlaag('affligem0')">-</button><span id="affligem0" class="aantal">0</span><button onclick="verhoog('affligem0')">+</button></div></div>
-  </div>
+  <!-- Categorieën en dranken worden geladen uit dranken.js -->
+  <div id="drankenContainer"></div>
 
-  <!-- WIJNEN -->
-  <div class="drank-blok" id="wijnen">
-    <h2>Wijnen</h2>
-    <div class="drank"><span>Cava</span><div class="bediening"><button onclick="verlaag('cava')">-</button><span id="cava" class="aantal">0</span><button onclick="verhoog('cava')">+</button></div></div>
-    <div class="drank"><span>Witte wijn</span><div class="bediening"><button onclick="verlaag('witwijn')">-</button><span id="witwijn" class="aantal">0</span><button onclick="verhoog('witwijn')">+</button></div></div>
-    <div class="drank"><span>Rosé</span><div class="bediening"><button onclick="verlaag('rose')">-</button><span id="rose" class="aantal">0</span><button onclick="verhoog('rose')">+</button></div></div>
-  </div>
-
-  <!-- FRISDRANKEN -->
-  <div class="drank-blok" id="frisdranken">
-    <h2>Frisdranken</h2>
-    <div class="drank"><span>Cola</span><div class="bediening"><button onclick="verlaag('cola')">-</button><span id="cola" class="aantal">0</span><button onclick="verhoog('cola')">+</button></div></div>
-    <div class="drank"><span>Cola Zero</span><div class="bediening"><button onclick="verlaag('colazero')">-</button><span id="colazero" class="aantal">0</span><button onclick="verhoog('colazero')">+</button></div></div>
-    <div class="drank"><span>Ice Tea</span><div class="bediening"><button onclick="verlaag('icetea')">-</button><span id="icetea" class="aantal">0</span><button onclick="verhoog('icetea')">+</button></div></div>
-    <div class="drank"><span>Ice Tea Zero</span><div class="bediening"><button onclick="verlaag('iceteazero')">-</button><span id="iceteazero" class="aantal">0</span><button onclick="verhoog('iceteazero')">+</button></div></div>
-    <div class="drank"><span>Ice Tea Green</span><div class="bediening"><button onclick="verlaag('iceteagreen')">-</button><span id="iceteagreen" class="aantal">0</span><button onclick="verhoog('iceteagreen')">+</button></div></div>
-    <div class="drank"><span>Plat water</span><div class="bediening"><button onclick="verlaag('platwater')">-</button><span id="platwater" class="aantal">0</span><button onclick="verhoog('platwater')">+</button></div></div>
-    <div class="drank"><span>Spuitwater</span><div class="bediening"><button onclick="verlaag('spuitwater')">-</button><span id="spuitwater" class="aantal">0</span><button onclick="verhoog('spuitwater')">+</button></div></div>
-    <div class="drank"><span>Tonic</span><div class="bediening"><button onclick="verlaag('tonic')">-</button><span id="tonic" class="aantal">0</span><button onclick="verhoog('tonic')">+</button></div></div>
-  </div>
-
+  <script src="dranken.js"></script>
   <script>
+    function renderDranken() {
+      const container = document.getElementById("drankenContainer");
+      container.innerHTML = "";
+
+      drankData.forEach(categorie => {
+        const blok = document.createElement("div");
+        blok.className = "drank-blok";
+        blok.id = categorie.id;
+
+        const titel = document.createElement("h2");
+        titel.textContent = categorie.naam;
+        blok.appendChild(titel);
+
+        categorie.dranken.forEach(drank => {
+          const rij = document.createElement("div");
+          rij.className = "drank";
+
+          const naam = document.createElement("span");
+          naam.textContent = drank.naam;
+
+          const bediening = document.createElement("div");
+          bediening.className = "bediening";
+
+          const min = document.createElement("button");
+          min.textContent = "-";
+          min.addEventListener("click", () => verlaag(drank.id));
+
+          const aantal = document.createElement("span");
+          aantal.id = drank.id;
+          aantal.className = "aantal";
+          aantal.textContent = "0";
+
+          const plus = document.createElement("button");
+          plus.textContent = "+";
+          plus.addEventListener("click", () => verhoog(drank.id));
+
+          bediening.append(min, aantal, plus);
+          rij.append(naam, bediening);
+          blok.appendChild(rij);
+        });
+
+        container.appendChild(blok);
+      });
+    }
+
     function verhoog(id) {
       const el = document.getElementById(id);
       el.textContent = parseInt(el.textContent) + 1;
@@ -130,16 +149,18 @@
 
     function updateTotaal() {
       let totaal = 0;
-      document.querySelectorAll('.aantal').forEach(el => {
+      document.querySelectorAll(".aantal").forEach(el => {
         totaal += parseInt(el.textContent);
       });
-      document.getElementById('totaalAantal').textContent = totaal;
+      document.getElementById("totaalAantal").textContent = totaal;
     }
 
     function resetAlles() {
-      document.querySelectorAll('.aantal').forEach(el => el.textContent = "0");
-      document.getElementById('totaalAantal').textContent = "0";
+      document.querySelectorAll(".aantal").forEach(el => el.textContent = "0");
+      document.getElementById("totaalAantal").textContent = "0";
     }
+
+    renderDranken();
   </script>
 
 </body>
