@@ -2,21 +2,36 @@
 <html lang="nl">
 <head>
   <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <meta charset="UTF-8">
   <title>Drankbestelling</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
+
+    :root {
+      --blokbreedte: 400px;
+    }
+
     body {
       font-family: Arial, sans-serif;
       background-color: #f8f8f8;
       margin: 20px;
     }
+
     h2 {
-    color: #333;
-    margin-top: 0;
-    margin-bottom: 15px;
+      color: #333;
+      margin-top: 0;
+      margin-bottom: 15px;
     }
+
+    .top-balk,
+    .drank-blok,
+    .toggle-knop {
+      width: var(--blokbreedte);
+      box-sizing: border-box;
+    }
+
     .top-balk {
       display: flex;
       justify-content: space-between;
@@ -25,33 +40,54 @@
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       padding: 20px;
-      max-width: 400px;
       margin-bottom: 15px;
       font-size: 18px;
       font-weight: bold;
     }
+
+    .toggle-knop {
+      display: block;
+      margin-bottom: 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .toggle-knop:hover {
+      background-color: #218838;
+    }
+
     .drank-blok {
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       padding: 20px;
-      max-width: 400px;
       margin-bottom: 20px;
     }
+
     .drank {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin: 10px 0;
     }
+
     .drank span:first-child {
       flex: 1;
     }
+
     .bediening {
       display: flex;
       align-items: center;
       gap: 14px;
     }
+
     button {
       background-color: #007BFF;
       color: white;
@@ -61,39 +97,61 @@
       cursor: pointer;
       font-size: 18px;
     }
+
     button:hover {
       background-color: #0056b3;
     }
+
     .aantal {
       width: 30px;
       text-align: center;
       font-weight: bold;
     }
+
     #reset {
       background-color: #dc3545;
     }
+
     #reset:hover {
       background-color: #b02a37;
     }
+
   </style>
 </head>
+
 <body>
 
   <div class="top-balk">
-    <div>Totaal aantal drankjes: <span id="totaalAantal">0</span></div>
+    <div>
+      Totaal aantal drankjes:
+      <span id="totaalAantal">0</span>
+    </div>
+
     <button id="reset" onclick="resetAlles()">Reset</button>
   </div>
 
-  <!-- Categorieën en dranken worden geladen uit dranken.js -->
+  <button
+    id="toggleKnop"
+    class="toggle-knop"
+    onclick="toggleNulregels()">
+    Verberg 0-lijnen
+  </button>
+
   <div id="drankenContainer"></div>
 
   <script src="dranken.js"></script>
+
   <script>
+
+    let verbergNulregels = false;
+
     function renderDranken() {
+
       const container = document.getElementById("drankenContainer");
       container.innerHTML = "";
 
       drankData.forEach(categorie => {
+
         const blok = document.createElement("div");
         blok.className = "drank-blok";
         blok.id = categorie.id;
@@ -103,6 +161,7 @@
         blok.appendChild(titel);
 
         categorie.dranken.forEach(drank => {
+
           const rij = document.createElement("div");
           rij.className = "drank";
 
@@ -127,11 +186,13 @@
 
           bediening.append(min, aantal, plus);
           rij.append(naam, bediening);
+
           blok.appendChild(rij);
         });
 
         container.appendChild(blok);
       });
+
     }
 
     function verhoog(id) {
@@ -143,24 +204,95 @@
     function verlaag(id) {
       const el = document.getElementById(id);
       const value = parseInt(el.textContent);
-      if (value > 0) el.textContent = value - 1;
+
+      if (value > 0) {
+        el.textContent = value - 1;
+      }
+
       updateTotaal();
     }
 
     function updateTotaal() {
+
       let totaal = 0;
+
       document.querySelectorAll(".aantal").forEach(el => {
         totaal += parseInt(el.textContent);
       });
+
       document.getElementById("totaalAantal").textContent = totaal;
+
+      if (verbergNulregels) {
+        updateZichtbaarheid();
+      }
+    }
+
+    function toggleNulregels() {
+
+      verbergNulregels = !verbergNulregels;
+
+      document.getElementById("toggleKnop").textContent =
+        verbergNulregels
+          ? "Toon 0-lijnen"
+          : "Verberg 0-lijnen";
+
+      updateZichtbaarheid();
+    }
+
+    function updateZichtbaarheid() {
+
+      document.querySelectorAll(".drank").forEach(rij => {
+
+        const aantal = parseInt(
+          rij.querySelector(".aantal").textContent
+        );
+
+        if (verbergNulregels && aantal === 0) {
+          rij.style.display = "none";
+        } else {
+          rij.style.display = "flex";
+        }
+
+      });
+
+      document.querySelectorAll(".drank-blok").forEach(blok => {
+
+        const zichtbareDranken = Array.from(
+          blok.querySelectorAll(".drank")
+        ).some(rij => rij.style.display !== "none");
+
+        blok.style.display =
+          zichtbareDranken ? "block" : "none";
+
+      });
+
     }
 
     function resetAlles() {
-      document.querySelectorAll(".aantal").forEach(el => el.textContent = "0");
+
+      document.querySelectorAll(".aantal").forEach(el => {
+        el.textContent = "0";
+      });
+
       document.getElementById("totaalAantal").textContent = "0";
+
+      verbergNulregels = false;
+
+      document.getElementById("toggleKnop").textContent =
+        "Verberg 0-lijnen";
+
+      document.querySelectorAll(".drank").forEach(rij => {
+        rij.style.display = "flex";
+      });
+
+      document.querySelectorAll(".drank-blok").forEach(blok => {
+        blok.style.display = "block";
+      });
+
     }
 
     renderDranken();
+
   </script>
 
 </body>
